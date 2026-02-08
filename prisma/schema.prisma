@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户表（auth 模块）
+model User {
+  id              String    @id @default(cuid())
+  secondmeUserId  String    @unique @map("secondme_user_id")
+  nickname        String?
+  avatar          String?
+  accessToken     String    @map("access_token")
+  refreshToken    String    @map("refresh_token")
+  tokenExpiresAt  DateTime  @map("token_expires_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  sessions        Session[]
+
+  @@map("users")
+}
+
+// 会话记录表
+model Session {
+  id            String    @id @default(cuid())
+  userId        String    @map("user_id")
+  userAiId      String    @map("user_ai_id")
+  partnerAiId   String    @map("partner_ai_id")
+  advisorAiIds  String    @map("advisor_ai_ids") // JSON array
+  sceneType     String    @map("scene_type") // dating_party, chat_assistant, analysis
+  startTime     DateTime  @default(now()) @map("start_time")
+  endTime       DateTime? @map("end_time")
+  status        String    @default("active") // active, completed, terminated
+
+  user          User      @relation(fields: [userId], references: [id])
+  messages      Message[]
+  analyses      Analysis[]
+  riskAssessments RiskAssessment[]
+
+  @@map("sessions")
+}
+
+// 对话消息表
+model Message {
+  id          String    @id @default(cuid())
+  sessionId   String    @map("session_id")
+  senderAiId  String    @map("sender_ai_id")
+  content     String
+  timestamp   DateTime  @default(now())
+
+  session     Session   @relation(fields: [sessionId], references: [id])
+  analyses    Analysis[]
+
+  @@map("messages")
+}
+
+// 智囊团分析表
+model Analysis {
+  id            String    @id @default(cuid())
+  sessionId     String    @map("session_id")
+  messageId     String    @map("message_id")
+  advisorAiId   String    @map("advisor_ai_id")
+  analysisType  String    @map("analysis_type") // detective, emotional, rational, guardian, humor
+  content       String    // JSON
+  timestamp     DateTime  @default(now())
+
+  session       Session   @relation(fields: [sessionId], references: [id])
+  message       Message   @relation(fields: [messageId], references: [id])
+
+  @@map("analyses")
+}
+
+// 风险评估表
+model RiskAssessment {
+  id          String    @id @default(cuid())
+  sessionId   String    @map("session_id")
+  riskLevel   String    @map("risk_level") // low, medium, high
+  redFlags    String    @map("red_flags") // JSON array
+  greenFlags  String    @map("green_flags") // JSON array
+  timestamp   DateTime  @default(now())
+
+  session     Session   @relation(fields: [sessionId], references: [id])
+
+  @@map("risk_assessments")
+}
+
+// AI 信任评分表
+model AiTrustScore {
+  aiId          String    @id @map("ai_id")
+  trustScore    Int       @default(80) @map("trust_score") // 0-100
+  userRating    Float?    @map("user_rating") // 0-5
+  reportCount   Int       @default(0) @map("report_count")
+  activeDays    Int       @default(0) @map("active_days")
+  lastUpdated   DateTime  @updatedAt @map("last_updated")
+
+  @@map("ai_trust_scores")
+}

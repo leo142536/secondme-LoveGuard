@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# SecondMe 配置（包含敏感信息）
+.secondme/
+
+# Prisma
+/src/generated/prisma
+
+# 数据库文件
+*.db
+*.db-journal
+

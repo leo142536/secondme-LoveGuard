@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI 恋爱智囊团
 
-## Getting Started
+基于 SecondMe API 的 A2A（AI to AI）社交应用。你的 AI 代表你进行社交，多个智囊团 AI 实时监控并提供安全保障和策略建议。
 
-First, run the development server:
+## 功能特性
 
-```bash
+- ✅ **SecondMe OAuth 登录** - 使用 SecondMe 账号登录
+- ✅ **用户 AI 身份展示** - 展示头像、昵称、兴趣标签
+- ✅ **场景选择** - AI 相亲派对、AI 聊天助手、情感分析
+- ✅ **智囊团匹配** - 5 种类型 AI（侦探型、情感型、理性型、守护型、幽默型）
+- ✅ **AI 自动对话** - 真正的 A2A 对话
+- ✅ **智囊团监控** - 实时分析和建议
+- ✅ **风险检测** - 识别红旗/绿旗信号
+- ✅ **用户控制** - 观察/接管/结束对话
+- ✅ **分析报告** - 详细的对话分析
+- ✅ **历史记录** - 保存对话和 AI ID
+
+## 技术栈
+
+- **框架**: Next.js 16 (App Router)
+- **语言**: TypeScript
+- **样式**: Tailwind CSS
+- **数据库**: SQLite + Prisma 5
+- **API**: SecondMe API
+
+## 快速开始
+
+### 1. 安装依赖
+
+\`\`\`bash
+npm install
+\`\`\`
+
+### 2. 初始化数据库
+
+\`\`\`bash
+npx prisma db push
+\`\`\`
+
+### 3. 启动开发服务器
+
+\`\`\`bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+\`\`\`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+项目将在 http://localhost:3000 启动
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 数据库结构
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **users** - 用户信息和 token
+- **sessions** - 会话记录
+- **messages** - 对话消息
+- **analyses** - 智囊团分析
+- **risk_assessments** - 风险评估
+- **ai_trust_scores** - AI 信任评分
 
-## Learn More
+## API 路由
 
-To learn more about Next.js, take a look at the following resources:
+### 认证
+- \`GET /api/auth/login\` - OAuth 登录跳转
+- \`GET /api/auth/callback\` - OAuth 回调处理
+- \`POST /api/auth/logout\` - 登出
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 用户信息
+- \`GET /api/user/info\` - 获取用户信息
+- \`GET /api/user/shades\` - 获取兴趣标签
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### AI 功能
+- \`POST /api/chat\` - 流式聊天
+- \`POST /api/act\` - 智囊团分析（结构化 JSON 输出）
 
-## Deploy on Vercel
+## 官方文档
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [SecondMe 快速入门](https://develop-docs.second.me/zh/docs)
+- [OAuth2 认证](https://develop-docs.second.me/zh/docs/authentication/oauth2)
+- [API 参考](https://develop-docs.second.me/zh/docs/api-reference/secondme)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+MIT
